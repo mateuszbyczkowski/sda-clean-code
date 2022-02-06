@@ -1,19 +1,24 @@
-package pl.sda.refactoring.customers;
+package pl.sda.refactorapp.entity;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
+import pl.sda.refactorapp.annotation.Entity;
+import pl.sda.refactorapp.annotation.Id;
 
 /**
  * The customer, can be person or company
  */
+@Entity
 public class Customer {
 
     // customer types
     public static final int COMPANY = 1;
     public static final int PERSON = 2;
 
+    @Id
     private UUID id;
+
     private int type;
     private LocalDateTime ctime;
     private String email;
@@ -188,5 +193,27 @@ public class Customer {
         return Objects
             .hash(id, type, ctime, email, verfTime, verf, verifBy, compName, compVat, fName, lName, pesel, addrStreet,
                 addrCity, addrZipCode, addrCountryCode);
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+            "id=" + id +
+            ", type=" + type +
+            ", ctime=" + ctime +
+            ", email='" + email + '\'' +
+            ", verfTime=" + verfTime +
+            ", verf=" + verf +
+            ", verifBy=" + verifBy +
+            ", compName='" + compName + '\'' +
+            ", compVat='" + compVat + '\'' +
+            ", fName='" + fName + '\'' +
+            ", lName='" + lName + '\'' +
+            ", pesel='" + pesel + '\'' +
+            ", addrStreet='" + addrStreet + '\'' +
+            ", addrCity='" + addrCity + '\'' +
+            ", addrZipCode='" + addrZipCode + '\'' +
+            ", addrCountryCode='" + addrCountryCode + '\'' +
+            '}';
     }
 }

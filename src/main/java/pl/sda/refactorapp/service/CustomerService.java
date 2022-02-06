@@ -1,6 +1,7 @@
-package pl.sda.refactoring.customers;
+package pl.sda.refactorapp.service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -14,9 +15,17 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import pl.sda.refactorapp.annotation.Inject;
+import pl.sda.refactorapp.annotation.Service;
+import pl.sda.refactorapp.annotation.Transactional;
+import pl.sda.refactorapp.dao.CustomerDao;
+import pl.sda.refactorapp.entity.Customer;
+import pl.sda.refactorapp.entity.CustomerVerifier;
 
+@Service
 public class CustomerService {
 
+    @Inject
     private CustomerDao dao;
 
     /**
@@ -28,6 +37,7 @@ public class CustomerService {
      * @param verified
      * @return
      */
+    @Transactional
     public boolean registerPerson(String email, String fName, String lName, String pesel, boolean verified) {
         var result = false;
         var customer = new Customer();
@@ -90,6 +100,7 @@ public class CustomerService {
      * @param verified
      * @return
      */
+    @Transactional
     public boolean registerCompany(String email, String name, String vat, boolean verified) {
         var result = false;
         var customer = new Customer();
@@ -150,6 +161,7 @@ public class CustomerService {
      * @param country
      * @return
      */
+    @Transactional
     public boolean updateAddress(UUID cid, String str, String zipcode, String city, String country) {
         var result = false;
         var customer = dao.findById(cid);
@@ -163,6 +175,10 @@ public class CustomerService {
            result = true;
         }
         return result;
+    }
+
+    public Optional<Customer> findById(UUID cid) {
+        return dao.findById(cid);
     }
 
     private boolean isValidPerson(Customer customer) {
@@ -213,9 +229,5 @@ public class CustomerService {
             ex.printStackTrace();
             return false;
         }
-    }
-
-    public void setDao(CustomerDao dao) {
-        this.dao = dao;
     }
 }

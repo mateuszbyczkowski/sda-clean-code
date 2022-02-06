@@ -1,4 +1,4 @@
-package pl.sda.refactoring.customers;
+package pl.sda.refactorapp.service;
 
 import org.junit.jupiter.api.Test;
 

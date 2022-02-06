@@ -1,4 +1,4 @@
-package pl.sda.refactoring.customers;
+package pl.sda.refactorapp.entity;
 
 public enum CustomerVerifier {
 

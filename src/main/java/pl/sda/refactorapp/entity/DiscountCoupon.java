@@ -1,11 +1,15 @@
-package pl.sda.refactoring.customers;
+package pl.sda.refactorapp.entity;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
+import pl.sda.refactorapp.annotation.Entity;
+import pl.sda.refactorapp.annotation.Id;
 
+@Entity
 public class DiscountCoupon {
 
+    @Id
     private String coupon;
     private float value;
     private LocalDateTime validDate;
@@ -44,6 +48,14 @@ public class DiscountCoupon {
         this.usedBy = usedBy;
     }
 
+    public LocalDateTime getValidDate() {
+        return validDate;
+    }
+
+    public void setValidDate(LocalDateTime validDate) {
+        this.validDate = validDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -62,11 +74,14 @@ public class DiscountCoupon {
         return Objects.hash(coupon, value, used, usedBy);
     }
 
-    public LocalDateTime getValidDate() {
-        return validDate;
-    }
-
-    public void setValidDate(LocalDateTime validDate) {
-        this.validDate = validDate;
+    @Override
+    public String toString() {
+        return "DiscountCoupon{" +
+            "coupon='" + coupon + '\'' +
+            ", value=" + value +
+            ", validDate=" + validDate +
+            ", used=" + used +
+            ", usedBy=" + usedBy +
+            '}';
     }
 }

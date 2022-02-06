@@ -1,4 +1,4 @@
-package pl.sda.refactoring.customers;
+package pl.sda.refactorapp.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,11 +16,24 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import pl.sda.refactorapp.annotation.Inject;
+import pl.sda.refactorapp.annotation.Service;
+import pl.sda.refactorapp.annotation.Transactional;
+import pl.sda.refactorapp.dao.DiscountCouponsDao;
+import pl.sda.refactorapp.dao.OrderDao;
+import pl.sda.refactorapp.entity.Item;
+import pl.sda.refactorapp.entity.Order;
 
+@Service
 public class OrderService {
 
-    private CustomerDao customerDao;
+    @Inject
+    private CustomerService customerService;
+
+    @Inject
     private DiscountCouponsDao couponsDao;
+
+    @Inject
     private OrderDao dao;
 
     /**
@@ -30,10 +43,20 @@ public class OrderService {
      * @param coupon
      * @return
      */
+    @Transactional
     public boolean makeOrder(UUID cid, List<Item> items, String coupon) {
         var result = false;
-        var optional = customerDao.findById(cid);
+        var optional = customerService.findById(cid);
         if (optional.isPresent() && items != null && items.size() > 0) {
+            // validate items
+            for (var item : items) {
+                if (item.getPrice().compareTo(BigDecimal.ZERO) <= 0 ||
+                    item.getWeight() <= 0 ||
+                    item.getQuantity() < 1) {
+                    return false;
+                }
+            }
+
             var order = new Order();
             genId(order);
             order.setCid(cid);
@@ -47,7 +70,7 @@ public class OrderService {
             order.setItems(itemsList);
 
             // add discount
-            final var optDiscCoupon = couponsDao.findByCode(coupon);
+            var optDiscCoupon = couponsDao.findByCode(coupon);
             if (optDiscCoupon.isPresent()) {
                 var dc = optDiscCoupon.get();
                 if (!dc.isUsed()) {
@@ -74,24 +97,6 @@ public class OrderService {
         return result;
     }
 
-    private void computeDelivery(List<Item> items, Order order) {
-        var tp = BigDecimal.ZERO;
-        var tw = 0;
-        for (Item i : items) {
-            tp = tp.add(i.getPrice().multiply(new BigDecimal(i.getQuantity()))); // tp = tp + (i.price * i.quantity)
-            tw += (i.getQuantity() * i.getWeight());
-        }
-        if (tp.compareTo(new BigDecimal(250)) > 0 && tw < 1) {
-            order.setDeliveryCost(BigDecimal.ZERO);
-        } else if (tw < 1) {
-            order.setDeliveryCost(new BigDecimal(15));
-        } else if (tw < 5) {
-            order.setDeliveryCost(new BigDecimal(35));
-        } else {
-            order.setDeliveryCost(new BigDecimal(50));
-        }
-    }
-
     /**
      * Create order and apply provided discount
      * @param cid
@@ -99,10 +104,20 @@ public class OrderService {
      * @param discount
      * @return
      */
+    @Transactional
     public boolean makeOrder(UUID cid, List<Item> items, float discount) {
         var result = false;
-        var optional = customerDao.findById(cid);
+        var optional = customerService.findById(cid);
         if (optional.isPresent() && items != null && items.size() > 0 && discount > 0 && discount < 1) {
+            // validate items
+            for (var i : items) {
+                if (i.getPrice().compareTo(BigDecimal.ZERO) <= 0 ||
+                    i.getWeight() <= 0 ||
+                    i.getQuantity() < 1) {
+                    return false;
+                }
+            }
+
             var order = new Order();
             genId(order);
             order.setCid(cid);
@@ -137,6 +152,7 @@ public class OrderService {
      * @param status
      * @return
      */
+    @Transactional
     public boolean updateOrderStatus(UUID oid, int status) {
         var result = false;
         var optional = dao.findById(oid);
@@ -145,7 +161,7 @@ public class OrderService {
             if (status - order.getStatus() == 1) {
                 order.setStatus(status);
                 dao.save(order);
-                var customer = customerDao.findById(order.getCid()).get();
+                var customer = customerService.findById(order.getCid()).get();
                 var emailSend = false;
                 if (status == 2) {
                     emailSend = sendEmail(customer.getEmail(),
@@ -165,6 +181,24 @@ public class OrderService {
 
     private void genId(Order order) {
         order.setId(UUID.randomUUID());
+    }
+
+    private void computeDelivery(List<Item> items, Order order) {
+        var tp = BigDecimal.ZERO;
+        var tw = 0;
+        for (Item i : items) {
+            tp = tp.add(i.getPrice().multiply(new BigDecimal(i.getQuantity()))); // tp = tp + (i.price * i.quantity)
+            tw += (i.getQuantity() * i.getWeight());
+        }
+        if (tp.compareTo(new BigDecimal(250)) > 0 && tw < 1) {
+            order.setDeliveryCost(BigDecimal.ZERO);
+        } else if (tw < 1) {
+            order.setDeliveryCost(new BigDecimal(15));
+        } else if (tw < 5) {
+            order.setDeliveryCost(new BigDecimal(35));
+        } else {
+            order.setDeliveryCost(new BigDecimal(50));
+        }
     }
 
     private boolean sendEmail(String address, String subj, String msg) {
@@ -203,17 +237,5 @@ public class OrderService {
             ex.printStackTrace();
             return false;
         }
-    }
-
-    public void setCustomerDao(CustomerDao customerDao) {
-        this.customerDao = customerDao;
-    }
-
-    public void setCouponsDao(DiscountCouponsDao couponsDao) {
-        this.couponsDao = couponsDao;
-    }
-
-    public void setDao(OrderDao dao) {
-        this.dao = dao;
     }
 }

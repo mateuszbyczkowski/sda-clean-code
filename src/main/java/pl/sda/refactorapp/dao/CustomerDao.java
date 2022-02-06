@@ -1,8 +1,11 @@
-package pl.sda.refactoring.customers;
+package pl.sda.refactorapp.dao;
 
 import java.util.Optional;
 import java.util.UUID;
+import pl.sda.refactorapp.annotation.Repository;
+import pl.sda.refactorapp.entity.Customer;
 
+@Repository
 public class CustomerDao {
 
     public void save(Customer customer) {

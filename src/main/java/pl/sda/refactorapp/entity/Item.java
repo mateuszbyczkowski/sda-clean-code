@@ -1,11 +1,15 @@
-package pl.sda.refactoring.customers;
+package pl.sda.refactorapp.entity;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
+import pl.sda.refactorapp.annotation.Entity;
+import pl.sda.refactorapp.annotation.Id;
 
+@Entity
 public class Item {
 
+    @Id
     private UUID id;
     private String name;
     private BigDecimal price;
@@ -44,6 +48,14 @@ public class Item {
         this.quantity = quantity;
     }
 
+    public Float getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Float weight) {
+        this.weight = weight;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -61,13 +73,5 @@ public class Item {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, price, quantity, weight);
-    }
-
-    public Float getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Float weight) {
-        this.weight = weight;
     }
 }
