@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Map;
 
-final class EvnHelper {
+final class EnvHelper {
 
     public static void setEnvironmentVariables(Map<String, String> environments) throws Exception {
         final var classes = Collections.class.getDeclaredClasses();
