@@ -3,14 +3,14 @@ package pl.sda.refactorapp.controller;
 import java.util.List;
 import java.util.UUID;
 import pl.sda.refactorapp.annotation.Controller;
-import pl.sda.refactorapp.annotation.Inject;
+import pl.sda.refactorapp.annotation.Autowired;
 import pl.sda.refactorapp.entity.Item;
 import pl.sda.refactorapp.service.OrderService;
 
 @Controller
 public class OrderController {
 
-    @Inject
+    @Autowired
     private OrderService orderService;
 
     public String postMakeOrder(UUID customer, List<Item> items, String coupon) {

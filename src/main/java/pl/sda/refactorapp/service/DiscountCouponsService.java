@@ -1,7 +1,7 @@
 package pl.sda.refactorapp.service;
 
 import java.time.LocalDateTime;
-import pl.sda.refactorapp.annotation.Inject;
+import pl.sda.refactorapp.annotation.Autowired;
 import pl.sda.refactorapp.annotation.Service;
 import pl.sda.refactorapp.annotation.Transactional;
 import pl.sda.refactorapp.dao.DiscountCouponsDao;
@@ -10,7 +10,7 @@ import pl.sda.refactorapp.entity.DiscountCoupon;
 @Service
 public class DiscountCouponsService {
 
-    @Inject
+    @Autowired
     private DiscountCouponsDao dao;
 
     @Transactional

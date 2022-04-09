@@ -16,7 +16,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import pl.sda.refactorapp.annotation.Inject;
+import pl.sda.refactorapp.annotation.Autowired;
 import pl.sda.refactorapp.annotation.Service;
 import pl.sda.refactorapp.annotation.Transactional;
 import pl.sda.refactorapp.dao.DiscountCouponsDao;
@@ -27,13 +27,13 @@ import pl.sda.refactorapp.entity.Order;
 @Service
 public class OrderService {
 
-    @Inject
+    @Autowired
     private CustomerService customerService;
 
-    @Inject
+    @Autowired
     private DiscountCouponsDao couponsDao;
 
-    @Inject
+    @Autowired
     private OrderDao dao;
 
     /**
@@ -184,8 +184,8 @@ public class OrderService {
     }
 
     private void computeDelivery(List<Item> items, Order order) {
-        var tp = BigDecimal.ZERO;
-        var tw = 0;
+        var tp = BigDecimal.ZERO; //total price
+        var tw = 0; //total weight
         for (Item i : items) {
             tp = tp.add(i.getPrice().multiply(new BigDecimal(i.getQuantity()))); // tp = tp + (i.price * i.quantity)
             tw += (i.getQuantity() * i.getWeight());

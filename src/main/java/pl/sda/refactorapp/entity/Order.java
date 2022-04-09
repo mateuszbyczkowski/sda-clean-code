@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.UUID;
 import pl.sda.refactorapp.annotation.Entity;
 import pl.sda.refactorapp.annotation.Id;
-import pl.sda.refactorapp.annotation.Inject;
 import pl.sda.refactorapp.annotation.OneToMany;
 
 /**

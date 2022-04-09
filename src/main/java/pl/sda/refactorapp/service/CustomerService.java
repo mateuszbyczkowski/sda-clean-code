@@ -15,7 +15,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import pl.sda.refactorapp.annotation.Inject;
+import pl.sda.refactorapp.annotation.Autowired;
 import pl.sda.refactorapp.annotation.Service;
 import pl.sda.refactorapp.annotation.Transactional;
 import pl.sda.refactorapp.dao.CustomerDao;
@@ -25,7 +25,7 @@ import pl.sda.refactorapp.entity.CustomerVerifier;
 @Service
 public class CustomerService {
 
-    @Inject
+    @Autowired
     private CustomerDao dao;
 
     /**

@@ -2,13 +2,13 @@ package pl.sda.refactorapp.controller;
 
 import java.time.LocalDateTime;
 import pl.sda.refactorapp.annotation.Controller;
-import pl.sda.refactorapp.annotation.Inject;
+import pl.sda.refactorapp.annotation.Autowired;
 import pl.sda.refactorapp.service.DiscountCouponsService;
 
 @Controller
 public class DiscountCouponController {
 
-    @Inject
+    @Autowired
     private DiscountCouponsService couponsService;
 
     public String postNewCoupon(String code, LocalDateTime validDate) {
