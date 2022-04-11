@@ -6,25 +6,43 @@ import pl.sda.refactorapp.entity.Customer;
 class CustomerValidator {
 
     public void validate(Customer customer) throws Exception {
-        if(customer.getEmail() == null) {
-            throw new Exception("EMAIL");
+        if (customer.getEmail() == null) {
+            throw new EmailValidationException("This email is invalid!");
         }
 
-        if(customer.getfName() == null) {
-            throw new Exception("FNAME");
+        if (customer.getfName() == null) {
+            throw new FNameValidationException("FNAME");
         }
 
-        if(customer.getlName() == null) {
-            throw new Exception("LNAME");
+        if (customer.getLname() == null) {
+            throw new LastNameValidationException("LNAME");
         }
 
-        if(customer.getPesel() == null) {
+        if (customer.getPesel() == null) {
             throw new Exception("PESEL");
         }
 
-        if(customer.getAddrCity() == null) {
+        if (customer.getAddrCity() == null) {
             throw new Exception("CITY");
         }
+    }
+}
+
+class EmailValidationException extends Exception {
+    public EmailValidationException(String message) {
+        super(message);
+    }
+}
+
+class FNameValidationException extends Exception {
+    public FNameValidationException(String message) {
+        super(message);
+    }
+}
+
+class LastNameValidationException extends Exception {
+    public LastNameValidationException(String message) {
+        super(message);
     }
 }
 
@@ -47,7 +65,14 @@ class ExceptionHandler {
             case "CITY":
                 showMessage("city is invalid");
                 break;
+            default:
+                showMessage("unknown error");
+                break;
         }
+    }
+
+    void catchException(EmailValidationException exception) {
+        showMessage(exception.getMessage());
     }
 
     private void showMessage(String msg) {

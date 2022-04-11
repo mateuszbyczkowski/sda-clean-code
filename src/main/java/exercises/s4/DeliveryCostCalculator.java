@@ -19,10 +19,14 @@ class DeliveryCostCalculator {
     private static final BigDecimal NORMAL_PARCEL = new BigDecimal(35);
     private static final BigDecimal OUTSIZE_PARCEL = new BigDecimal(50);
 
-    private void calculate(List<Item> items, Order order) {
+    private void calculateAndUpdateCost(List<Item> items, Order order) {
         BigDecimal totalPrice = calculatePrice(items);
         float totalWeight = calculateWeight(items);
 
+        updateDeliveryCost(order, totalPrice, totalWeight);
+    }
+
+    private void updateDeliveryCost(Order order, BigDecimal totalPrice, float totalWeight) {
         if (isFreeDelivery(totalPrice, totalWeight)) {
             order.setDeliveryCost(FREE_DELIVERY);
         } else if (isEconomicParcel(totalWeight)) {
@@ -35,7 +39,7 @@ class DeliveryCostCalculator {
     }
 
     private Float calculateWeight(List<Item> items) {
-        return items.stream().map(this::calculateItemWeight).reduce(0f, Float::sum);
+        return items.stream().map(item -> item.getQuantity() * item.getWeight()).reduce(0f, Float::sum);
     }
 
     private BigDecimal calculatePrice(List<Item> items) {
@@ -51,19 +55,8 @@ class DeliveryCostCalculator {
     }
 
     private boolean isFreeDelivery(BigDecimal totalPrice, float totalWeight) {
-        return isFreeDeliveryPrice(totalPrice) > 0 && isFreeDeliveryWeight(totalWeight);
-    }
-    // inline metod
-    private boolean isFreeDeliveryWeight(float totalWeight) {
-        return totalWeight < FREE_DELIVERY_WEIGHT_THRESHOLD;
-    }
-    // inline metod
-    private int isFreeDeliveryPrice(BigDecimal totalPrice) {
-        return totalPrice.compareTo(FREE_DELIVERY_PRICE_THRESHOLD);
-    }
-
-    private float calculateItemWeight(Item item) {
-        return item.getQuantity() * item.getWeight();
+        return totalPrice.compareTo(FREE_DELIVERY_PRICE_THRESHOLD) > 0
+                && totalWeight < FREE_DELIVERY_WEIGHT_THRESHOLD;
     }
 
     private BigDecimal calculateItemPrice(Item item) {

@@ -14,7 +14,7 @@ class Truck {
     Wheels wheels;
     int seats;
 
-    public Truck(Trailer trailer, String model, String color, int speed, Size size, Engine engine, Wheels wheels, int seats) {
+    Truck(Trailer trailer, String model, String color, int speed, Size size, Engine engine, Wheels wheels, int seats) {
         this.trailer = trailer;
         this.model = model;
         this.color = color;
@@ -34,7 +34,7 @@ class CruiseShip {
     Engine engine;
     int seats;
 
-    public CruiseShip(Trailer trailer, String model, String color, int speed, Size size, Engine engine, Wheels wheels, int seats) {
+    CruiseShip(String model, String color, int speed, Size size, Engine engine, int seats) {
         this.model = model;
         this.color = color;
         this.speed = speed;

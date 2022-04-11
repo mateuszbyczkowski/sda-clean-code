@@ -4,12 +4,11 @@ import java.math.BigDecimal;
 
 // enkapsulacja - chroń dostępd do stanu obiektów
 class BankTransfer {
-
-    TransferStatus status = TransferStatus.PENDING;
-    String from;
-    String to;
-    BigDecimal amount;
-    TransferType transferType;
+    private TransferStatus status = TransferStatus.PENDING;
+    private final String from;
+    private final String to;
+    private final BigDecimal amount;
+    private final TransferType transferType;
 
     BankTransfer(TransferStatus status, String from, String to, BigDecimal amount, TransferType transferType) {
         this.status = status;
@@ -18,6 +17,30 @@ class BankTransfer {
         this.amount = amount;
         this.transferType = transferType;
     }
+
+    public TransferStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TransferStatus status) {
+        this.status = status;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public String getTo() {
+        return to;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public TransferType getTransferType() {
+        return transferType;
+    }
 }
 
 enum TransferStatus {
@@ -25,5 +48,5 @@ enum TransferStatus {
 }
 
 enum TransferType {
-    ELIXIR, STANDARD, BLIK, INTERNAL, TAX;
+    ELIXIR, STANDARD, BLIK, INTERNAL, TAX
 }

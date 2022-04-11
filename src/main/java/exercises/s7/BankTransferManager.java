@@ -2,18 +2,31 @@ package exercises.s7;
 
 import pl.sda.refactorapp.annotation.Autowired;
 
+import java.math.BigDecimal;
+
 class BankTransferManager {
     @Autowired
     private BankTransferSender bankTransferSender;
 
     void sendBankTransfer(BankTransfer bankTransfer) {
-        bankTransfer.status = TransferStatus.INCOMPLETE;
+        bankTransfer.setStatus(TransferStatus.INCOMPLETE);
         boolean result = bankTransferSender.send(bankTransfer);
 
         if (result) {
-            bankTransfer.status = TransferStatus.COMPLETE;
+            bankTransfer.setStatus(TransferStatus.COMPLETE);
         } else {
-            bankTransfer.status = TransferStatus.FAILED;
+            bankTransfer.setStatus(TransferStatus.FAILED);
         }
+    }
+}
+
+
+class BankTransferController {
+    @Autowired
+    private BankTransferManager bankTransferManager;
+
+    void send() {
+        var transfer = new BankTransfer(TransferStatus.PENDING, "me", "you", BigDecimal.TEN, TransferType.BLIK);
+        bankTransferManager.sendBankTransfer(transfer);
     }
 }

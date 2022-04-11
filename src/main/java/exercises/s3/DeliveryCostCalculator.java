@@ -19,21 +19,50 @@ class DeliveryCostCalculator {
     private static final BigDecimal NORMAL_PARCEL = new BigDecimal(35);
     private static final BigDecimal OUTSIZE_PARCEL = new BigDecimal(50);
 
-    private void calculate(List<Item> items, Order order) {
-        var totalPrice = ZERO;
-        var totalWeight = 0;
-        for (Item item : items) {
-            totalPrice = totalPrice.add(item.getPrice().multiply(new BigDecimal(item.getQuantity())));
-            totalWeight += item.getQuantity() * item.getWeight();
-        }
-        if (totalPrice.compareTo(FREE_DELIVERY_PRICE_THRESHOLD) > 0 && totalWeight < FREE_DELIVERY_WEIGHT_THRESHOLD) {
+    private void calculateCostAndUpdateOrder(List<Item> items, Order order) {
+        BigDecimal totalPrice = calculateTotalPrice(items);
+        float totalWeight = calculateTotalWeight(items);
+
+        if (isFreeDelivery(totalPrice, totalWeight)) {
             order.setDeliveryCost(FREE_DELIVERY);
-        } else if ((totalWeight < FREE_DELIVERY_WEIGHT_THRESHOLD)) {
+        } else if (isEconomicParcel(totalWeight)) {
             order.setDeliveryCost(ECONOMIC_PARCEL);
-        } else if (totalWeight < NORMAL_DELIVERY_WEIGHT_THRESHOLD) {
+        } else if (isNormalParcel(totalWeight)) {
             order.setDeliveryCost(NORMAL_PARCEL);
         } else {
             order.setDeliveryCost(OUTSIZE_PARCEL);
         }
+    }
+
+    private BigDecimal calculateTotalPrice(List<Item> items) {
+        return items.stream().map(this::calculateItemPrice).reduce(ZERO, BigDecimal::add);
+    }
+
+    private BigDecimal calculateItemPrice(Item item) {
+        return item.getPrice().multiply(new BigDecimal(item.getQuantity()));
+    }
+
+    private float calculateTotalWeight(List<Item> items) {
+        var totalWeight = 0;
+        for (Item item : items) {
+            totalWeight += calculateItemWeight(item);
+        }
+        return totalWeight;
+    }
+
+    private float calculateItemWeight(Item item) {
+        return item.getQuantity() * item.getWeight();
+    }
+
+    private boolean isFreeDelivery(BigDecimal totalPrice, float totalWeight) {
+        return totalPrice.compareTo(FREE_DELIVERY_PRICE_THRESHOLD) > 0 && totalWeight < FREE_DELIVERY_WEIGHT_THRESHOLD;
+    }
+
+    private boolean isEconomicParcel(float totalWeight) {
+        return totalWeight < FREE_DELIVERY_WEIGHT_THRESHOLD;
+    }
+
+    private boolean isNormalParcel(float totalWeight) {
+        return totalWeight < NORMAL_DELIVERY_WEIGHT_THRESHOLD;
     }
 }

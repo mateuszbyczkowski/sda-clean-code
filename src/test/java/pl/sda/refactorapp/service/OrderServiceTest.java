@@ -1,17 +1,5 @@
 package pl.sda.refactorapp.service;
 
-import static java.util.UUID.randomUUID;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import javax.mail.Transport;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -25,6 +13,18 @@ import pl.sda.refactorapp.entity.Customer;
 import pl.sda.refactorapp.entity.DiscountCoupon;
 import pl.sda.refactorapp.entity.Item;
 import pl.sda.refactorapp.entity.Order;
+
+import javax.mail.Transport;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.UUID.randomUUID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
@@ -42,7 +42,7 @@ class OrderServiceTest {
     private OrderService orderService;
 
     @Test
-    void shouldMakeAnOrderWithDiscountCoupon() throws Exception {
+    void shouldMakeAnOrderWithDiscountCoupon() {
         // given
         final var customerId = randomUUID();
         final var customer = new Customer();
@@ -61,11 +61,6 @@ class OrderServiceTest {
         discountCoupon.setValue(0.2f);
         given(couponsDao.findByCode(couponCode)).willReturn(Optional.of(discountCoupon));
 
-        EnvHelper.setEnvironmentVariables(Map.of(
-            "MAIL_SMTP_HOST", "smtp.host",
-            "MAIL_SMTP_PORT", "22",
-            "MAIL_SMTP_SSL_TRUST", "true"
-        ));
         final var mockedStaticTransport = Mockito.mockStatic(Transport.class);
 
         // when

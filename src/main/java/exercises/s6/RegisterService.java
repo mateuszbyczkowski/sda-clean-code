@@ -1,71 +1,66 @@
 package exercises.s6;
 
 import pl.sda.refactorapp.annotation.Autowired;
-import pl.sda.refactorapp.annotation.Controller;
 import pl.sda.refactorapp.annotation.Service;
 import pl.sda.refactorapp.annotation.Transactional;
 import pl.sda.refactorapp.dao.CustomerDao;
 import pl.sda.refactorapp.entity.Customer;
-import pl.sda.refactorapp.entity.CustomerVerifier;
-import pl.sda.refactorapp.service.CustomerService;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 //grupowanie podobnych i zaleznych metod
 @Service
 class RegisterService {
 
     @Autowired
-    private CustomerDao dao;
+    private CustomerDao customerRepository;
 
     @Transactional
-    public boolean registerPerson(String email, String fName, String lName, String pesel, boolean verified) {
-        var result = false;
-        var customer = new Customer();
-        customer.setType(Customer.PERSON);
-        var isInDb = dao.emailExists(email) || dao.peselExists(pesel);
-        if (!isInDb) {
-            if (isValidPerson(customer)) {
-                result = true;
-            }
+    public boolean registerCustomer(Customer customer) {
+        var customerValid = isValid(customer);
+
+        if (customerValid) {
+            prepareAndSave(customer);
         }
 
-        if (result) {
-            genCustomerId(customer);
-            dao.save(customer);
-        }
-
-        return result;
+        return customerValid;
     }
 
-    @Transactional
-    public boolean registerCompany(String email, String name, String vat, boolean verified) {
-        var result = false;
-        var customer = new Customer();
-        customer.setType(Customer.COMPANY);
-        var isInDb = dao.emailExists(email) || dao.vatExists(vat); // vat jest również w customerze
-        if (!isInDb) {
-            if (isValidPerson(customer)) {
-                result = true;
-            }
+    private void prepareAndSave(Customer customer) {
+        //customer.setCreationTime(LocalDateTime.now());
+        customer.setId(UUID.randomUUID());
+        customerRepository.save(customer);
+    }
+
+    private boolean isValid(Customer customer) {
+        var isInDb = customerRepository.emailExists(customer.getEmail()) || vatOrPeselExists(customer);
+
+        if (isInDb) {
+            return false;
         }
 
-        if (result) {
-            customer.setCtime(LocalDateTime.now());
-            genCustomerId(customer);
-            dao.save(customer);
-        }
+        return isValidPerson(customer);
+    }
 
-        return result;
+    private boolean vatOrPeselExists(Customer customer) {
+        return customerRepository.vatExists(customer.getCompVat())
+                || customerRepository.peselExists(customer.getPesel());
     }
 
     private boolean isValidPerson(Customer customer) {
-        return customer.getEmail() != null && customer.getfName() != null && customer.getlName() != null && customer.getPesel() != null;
+        return customer.getEmail() != null && customer.getfName() != null && customer.getLname() != null && customer.getPesel() != null;
+    }
+}
+
+class RegisterController {
+    void registerUser(Customer customer) {
+        customer.setType(Customer.PERSON);
+        new RegisterService().registerCustomer(customer);
     }
 
-    private void genCustomerId(Customer customer) {
-        customer.setId(UUID.randomUUID());
+    void registerCompany(Customer customer) {
+        customer.setType(Customer.COMPANY);
+        new RegisterService().registerCustomer(customer);
     }
 }

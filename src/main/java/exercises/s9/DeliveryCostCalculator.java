@@ -1,48 +1,52 @@
 package exercises.s9;
 
-import pl.sda.refactorapp.entity.Item;
 import pl.sda.refactorapp.entity.Order;
 
-import java.util.List;
-
-// zmiana switch/if na polimorfizm
+// zmiana switch/if na polimorfizm //ZŁAMALIŚMY OPENED-CLOSED PRINCIPLE
 class DeliveryCostCalculator {
-    private void calculate(List<Item> items, Order order, DeliveryType deliveryType) {
+    private void calculate(Order order, DeliveryType deliveryType) {
         switch(deliveryType) {
             case OUTSIZE:
-                calculateOutsizeDelivery(items, order);
+                calculateOutsizeDelivery(order);
                 break;
             case FREE:
-                calculateFreeDelivery(items,order);
+                calculateFreeDelivery(order);
                 break;
             case GLASS:
-                calculateGlassDelivery(items, order);
+                calculateGlassDelivery(order);
                 break;
             case NORMAL:
-                calculateNormalDelivery(items, order);
+                calculateNormalDelivery(order);
+                break;
+            case FANCY:
+                calculateFancyDelivery(order);
                 break;
             default:
                 throw new IllegalStateException("Idk");
         }
     }
 
-    private void calculateNormalDelivery(List<Item> items, Order order) {
+    private void calculateFancyDelivery(Order order) {
+        //calculate fancy delivery
+    }
+
+    private void calculateNormalDelivery(Order order) {
         //calculate normal delivery
     }
 
-    private void calculateGlassDelivery(List<Item> items, Order order) {
+    private void calculateGlassDelivery(Order order) {
         //calculate glass delivery
     }
 
-    private void calculateFreeDelivery(List<Item> items, Order order) {
+    private void calculateFreeDelivery(Order order) {
         //calculate free delivery
     }
 
-    private void calculateOutsizeDelivery(List<Item> items, Order order) {
+    private void calculateOutsizeDelivery(Order order) {
         //calculate outsize delivery
     }
 }
 
 enum DeliveryType {
-    OUTSIZE, NORMAL, FREE, GLASS;
+    OUTSIZE, NORMAL, FREE, GLASS, FANCY
 }

@@ -15,14 +15,14 @@ class DeliveryCalculator {
     DeliveryProvider deliveryProvider;
 
     private void calculate(List<Item> items, Order order, DeliveryType deliveryType) {
-        Delivery delivery = deliveryProvider.provideDelivery(deliveryType);
+        Delivery delivery = deliveryProvider.provide(deliveryType);
 
         delivery.calculateCost(items, order);
     }
 }
 
 class DeliveryProvider {
-    Delivery provideDelivery(DeliveryType deliveryType) {
+    Delivery provide(DeliveryType deliveryType) {
         switch (deliveryType) {
             case OUTSIZE:
                 return new OutsizeDelivery();
@@ -32,6 +32,8 @@ class DeliveryProvider {
                 return new GlassDelivery();
             case NORMAL:
                 return new NormalDelivery();
+            case FANCY:
+                return new FancyDelivery();
             default:
                 throw new IllegalStateException("Idk");
         }
@@ -39,5 +41,5 @@ class DeliveryProvider {
 }
 
 enum DeliveryType {
-    OUTSIZE, NORMAL, FREE, GLASS;
+    OUTSIZE, NORMAL, FREE, GLASS, FANCY
 }

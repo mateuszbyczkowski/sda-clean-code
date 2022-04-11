@@ -182,7 +182,7 @@ public class CustomerService {
     }
 
     private boolean isValidPerson(Customer customer) {
-        return customer.getEmail() != null && customer.getfName() != null && customer.getlName() != null && customer.getPesel() != null;
+        return customer.getEmail() != null && customer.getfName() != null && customer.getLname() != null && customer.getPesel() != null;
     }
 
     private void genCustomerId(Customer customer) {
@@ -197,9 +197,9 @@ public class CustomerService {
         Properties prop = new Properties();
         prop.put("mail.smtp.auth", true);
         prop.put("mail.smtp.starttls.enable", "true");
-        prop.put("mail.smtp.host", System.getenv().get("MAIL_SMTP_HOST"));
-        prop.put("mail.smtp.port", System.getenv().get("MAIL_SMTP_PORT"));
-        prop.put("mail.smtp.ssl.trust", System.getenv().get("MAIL_SMTP_SSL_TRUST"));
+        prop.put("mail.smtp.host", "MAIL_SMTP_HOST");
+        prop.put("mail.smtp.port", "MAIL_SMTP_PORT");
+        prop.put("mail.smtp.ssl.trust", "MAIL_SMTP_SSL_TRUST");
 
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override

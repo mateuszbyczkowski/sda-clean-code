@@ -14,54 +14,42 @@ import java.util.UUID;
 class RegisterService {
 
     @Autowired
-    private CustomerDao dao;
+    private final CustomerDao dao;
 
-    @Transactional
-    public boolean registerPerson(String email, String fName, String lName, String pesel, boolean verified) {
-        var result = false;
-        var customer = new Customer();
-        customer.setType(Customer.PERSON);
-        var isInDb = dao.emailExists(email) || dao.peselExists(pesel);
-        if (!isInDb) {
-            if (isValidPerson(customer)) {
-                result = true;
-            }
-        }
-
-        if (result) {
-            genCustomerId(customer);
-            dao.save(customer);
-        }
-
-        return result;
+    public RegisterService(CustomerDao dao, CustomerValidator customerValidator) {
+        this.dao = dao;
     }
 
     @Transactional
-    public boolean registerCompany(String email, String name, String vat, boolean verified) {
-        var result = false;
-        var customer = new Customer();
-        customer.setType(Customer.COMPANY);
-        var isInDb = dao.emailExists(email) || dao.vatExists(vat); // vat jest również w customerze
-        if (!isInDb) {
-            if (isValidPerson(customer)) {
-                result = true;
-            }
+    public boolean registerCustomer(Customer customer) {
+        var isInDb = dao.emailExists(customer.getEmail()) || dao.peselExists(customer.getPesel());
+
+        if (isInDb) {
+            return false;
         }
 
-        if (result) {
-            customer.setCtime(LocalDateTime.now());
-            genCustomerId(customer);
-            dao.save(customer);
-        }
-
-        return result;
-    }
-
-    private boolean isValidPerson(Customer customer) {
-        return customer.getEmail() != null && customer.getfName() != null && customer.getlName() != null && customer.getPesel() != null;
-    }
-
-    private void genCustomerId(Customer customer) {
+        //customer.setCreationTime(LocalDateTime.now());
         customer.setId(UUID.randomUUID());
+        dao.save(customer);
+
+        return true;
+    }
+}
+
+class CustomerValidator {
+    public boolean isValid(Customer customer) {
+        return customer.getEmail() != null && customer.getfName() != null && customer.getLname() != null && customer.getPesel() != null;
+    }
+}
+
+class Main {
+    public void main(CustomerDao customerDao, CustomerValidator validator) {
+        Customer customer = new Customer();
+
+        RegisterService registerService = new RegisterService(customerDao, validator);
+
+        if (validator.isValid(customer)) {
+            registerService.registerCustomer(customer);
+        }
     }
 }

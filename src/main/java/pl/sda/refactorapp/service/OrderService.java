@@ -205,9 +205,9 @@ public class OrderService {
         Properties prop = new Properties();
         prop.put("mail.smtp.auth", true);
         prop.put("mail.smtp.starttls.enable", "true");
-        prop.put("mail.smtp.host", System.getenv().get("MAIL_SMTP_HOST"));
-        prop.put("mail.smtp.port", System.getenv().get("MAIL_SMTP_PORT"));
-        prop.put("mail.smtp.ssl.trust", System.getenv().get("MAIL_SMTP_SSL_TRUST"));
+        prop.put("mail.smtp.host", "MAIL_SMTP_HOST");
+        prop.put("mail.smtp.port", "MAIL_SMTP_PORT");
+        prop.put("mail.smtp.ssl.trust", "MAIL_SMTP_SSL_TRUST");
 
         Session session = Session.getInstance(prop, new Authenticator() {
             @Override

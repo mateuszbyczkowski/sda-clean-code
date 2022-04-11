@@ -89,7 +89,7 @@ public class Customer {
         this.fName = fName;
     }
 
-    public String getlName() {
+    public String getLname() {
         return lName;
     }
 
