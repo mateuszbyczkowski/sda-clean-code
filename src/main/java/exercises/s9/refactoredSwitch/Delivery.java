@@ -5,10 +5,10 @@ import pl.sda.refactorapp.entity.Order;
 
 import java.util.List;
 
-abstract class Delivery {
-    abstract boolean isDelivered(); //sprawdz czy zostalo dostarczone
+interface Delivery {
+    boolean isDelivered(); //sprawdz czy zostalo dostarczone
 
-    abstract void calculateCost(List<Item> items, Order order);
+    void calculateCost(List<Item> items, Order order);
 
-    abstract void deliver();
+    void deliver();
 }

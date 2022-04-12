@@ -5,21 +5,17 @@ import pl.sda.refactorapp.entity.Order;
 
 import java.util.List;
 
-public class FancyDelivery extends Delivery {
+public class FancyDelivery implements Delivery {
 
-
-    @Override
-    boolean isDelivered() {
+    public boolean isDelivered() {
         return false;
     }
 
-    @Override
-    void calculateCost(List<Item> items, Order order) {
+    public void calculateCost(List<Item> items, Order order) {
         //calculate fancy delivery cost.
     }
 
-    @Override
-    void deliver() {
+    public void deliver() {
 
     }
 }

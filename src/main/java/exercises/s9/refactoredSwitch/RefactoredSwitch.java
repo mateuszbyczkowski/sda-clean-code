@@ -12,17 +12,17 @@ import java.util.List;
 // spełnia zasadę OCP - otwarty zamknięty.
 class DeliveryCalculator {
     @Autowired
-    DeliveryProvider deliveryProvider;
+    DeliveryContext deliveryContext;
 
     private void calculate(List<Item> items, Order order, DeliveryType deliveryType) {
-        Delivery delivery = deliveryProvider.provide(deliveryType);
+        Delivery delivery = deliveryContext.setStrategy(deliveryType);
 
         delivery.calculateCost(items, order);
     }
 }
 
-class DeliveryProvider {
-    Delivery provide(DeliveryType deliveryType) {
+class DeliveryContext {
+    Delivery setStrategy(DeliveryType deliveryType) {
         switch (deliveryType) {
             case OUTSIZE:
                 return new OutsizeDelivery();

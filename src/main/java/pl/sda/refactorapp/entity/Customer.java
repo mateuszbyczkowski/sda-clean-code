@@ -41,6 +41,36 @@ public class Customer {
     private String addrZipCode;
     private String addrCountryCode;
 
+    private String password;
+
+    private CardData cardData;
+
+    public CardData getCardData() {
+        return cardData;
+    }
+
+    public void setCardData(CardData cardData) {
+        this.cardData = cardData;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public PreferredPayment getPreferredPayment() {
+        return preferredPayment;
+    }
+
+    public void setPreferredPayment(PreferredPayment preferredPayment) {
+        this.preferredPayment = preferredPayment;
+    }
+
+    private PreferredPayment preferredPayment;
+
     public UUID getId() {
         return id;
     }

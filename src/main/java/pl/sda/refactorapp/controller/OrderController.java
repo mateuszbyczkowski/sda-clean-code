@@ -2,6 +2,7 @@ package pl.sda.refactorapp.controller;
 
 import java.util.List;
 import java.util.UUID;
+
 import pl.sda.refactorapp.annotation.Controller;
 import pl.sda.refactorapp.annotation.Autowired;
 import pl.sda.refactorapp.entity.Item;
@@ -13,10 +14,11 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    public String postMakeOrder(UUID customer, List<Item> items, String coupon) {
-        if (orderService.makeOrder(customer, items, coupon)) {
+    public String postMakeOrder(UUID customer, List<Item> items, String coupon) throws Exception {
+        try {
+            orderService.makeOrder(customer, items, coupon);
             return "make-order-success-page";
-        } else {
+        } catch (Exception ex) {
             return "make-order-error-page";
         }
     }

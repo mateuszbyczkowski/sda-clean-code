@@ -5,20 +5,17 @@ import pl.sda.refactorapp.entity.Order;
 
 import java.util.List;
 
-class NormalDelivery extends Delivery {
+class NormalDelivery implements Delivery {
 
-    @Override
-    boolean isDelivered() {
+    public boolean isDelivered() {
         return false;
     }
 
-    @Override
-    void calculateCost(List<Item> items, Order order) {
+    public void calculateCost(List<Item> items, Order order) {
         //calculate normal delivery
     }
 
-    @Override
-    void deliver() {
+    public void deliver() {
 
     }
 }
