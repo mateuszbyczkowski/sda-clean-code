@@ -16,6 +16,10 @@ public class DiscountCoupon {
     private boolean used;
     private UUID usedBy;
 
+    public boolean isValid() {
+        return LocalDateTime.now().isAfter(validDate);
+    }
+
     public String getCoupon() {
         return coupon;
     }

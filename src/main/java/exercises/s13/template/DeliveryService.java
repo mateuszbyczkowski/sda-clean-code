@@ -66,13 +66,12 @@ public class DeliveryService {
 
         deliverWithPoczta("POCZTA");
 
-        reportsStatus(order);
+        reportStatus(order);
     }
 
     void deliverWithPoczta(String carrier) {
         //delivering package
     }
-
 
     void deliverFedEX(Order order) {
         //calculate cost
@@ -97,14 +96,13 @@ public class DeliveryService {
 
     void deliverPackage(String carrier, Order order) {
         //delivering package
-        reportsStatus(order);
+        reportStatus(order);
     }
 
-    void reportsStatus(Order order) {
+    void reportStatus(Order order) {
         Optional<Customer> optionalCustomer = customerService.findById(order.getCid());
         //reporting status
         sendEmail(optionalCustomer.get().getEmail(), "Delivery started", "We will deliver soon!");
-
     }
 
     private boolean sendEmail(String address, String subj, String msg) {

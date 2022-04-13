@@ -36,6 +36,16 @@ public class Order {
 
     private int status;
 
+    public String getChosenDelivery() {
+        return chosenDelivery;
+    }
+
+    public void setChosenDelivery(String chosenDelivery) {
+        this.chosenDelivery = chosenDelivery;
+    }
+
+    private String chosenDelivery;
+
     public BigDecimal deliveryCost;
 
     public UUID getId() {

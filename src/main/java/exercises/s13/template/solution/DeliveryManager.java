@@ -5,7 +5,12 @@ import pl.sda.refactorapp.entity.Order;
 
 public class DeliveryManager {
     void orderDelivery(Order order) {
-        DeliveryBase deliveryBase = new DeliveryPoczta();
+        DeliveryBase deliveryBase;
+        if (order.getChosenDelivery().equals("INPOST")) {
+            deliveryBase = new DeliveryInpost();
+        } else {
+            deliveryBase = new DeliveryPoczta();
+        }
 
         deliveryBase.deliver(order);
     }
